@@ -1,4 +1,4 @@
-import axios from 'axios'; // Corrected import statement
+import axios from 'axios'; 
 
 const API_URL = "http://localhost:3001/users"; // Updated to point to the /users endpoint
 

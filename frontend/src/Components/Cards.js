@@ -7,7 +7,7 @@ const Cards = ({users,handleEdit,handleDelete}) => {
     <div className=' lg:w-auto flex flex-col gap-5'>
       {
         users?.map(user =>(
-          <div className='h-25  w-auto bg-gray-300 p-3 px-5 rounded-lg flex justify-center relative items-center '>
+          <div className='h-25  w-auto bg-gray-300 p-3 px-5 rounded-lg flex justify-center relative items-center ' key={user.id}>
           {/* <span 
               className='bg-green-500 w-25 h-5 flex items-center justify-center px-3 py-1 gap-3 top-3 left-30 text-white font-bold absolute rounded'
           > <span className='w-2 h-2  bg-red-600 rounded-full wave' />

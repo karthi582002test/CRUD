@@ -2,14 +2,43 @@ const express = require('express');
 const cors = require('cors');
 const fileUpload = require('express-fileupload'); 
 const { upload } = require('./cloudinary');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const path = require('path');
 const app = express();
+const dotenv = require('dotenv');
+// const { User } = require('./Models/Model');
+
+dotenv.config();
+
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(fileUpload({ useTempFiles: true }));
+
+mongoose.connect(process.env.MONGO_BD_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', () => {
+    console.log('Connected to MongoDB');
+});
+
+const userSchema = new mongoose.Schema({
+    id : {type:String , required:true},
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    phone : {type:String , required:true},
+    gender : {type : String, require:true},
+    imageLink : {type:String, require : true}
+});
+
+const  User = mongoose.model('users-data', userSchema);
+
 
 // Middleware to serve static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -52,6 +81,8 @@ app.route('/users')
              const cloudFile = await upload(req.files.image.tempFilePath);
               // Upload to Cloudinary
                user.imagePath = cloudFile.secure_url;
+            //    const newUser = User(user)
+            //    await newUser.save()
                 // Save Cloudinary URL 
                 data.push(user); 
                 res.status(201).json({ message: "Success", link : cloudFile.secure_url }); 
